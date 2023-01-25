@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8"/>
-    <title>Log In | {{ config('app.name') }} </title>
+    <title>Log In | Hyper - Responsive Bootstrap 4 Admin Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description"/>
     <meta content="Coderthemes" name="author"/>
@@ -11,10 +11,8 @@
     <link rel="shortcut icon" href="assets/images/favicon.ico">
 
     <!-- App css -->
-    <link href="{{asset('css/icons.min.css')}}" rel="stylesheet" type="text/css">
-    <link href="{{asset('css/app-creative.min.css')}}" rel="stylesheet" type="text/css" id="light-style"
-          disabled="disabled">
-    <link href="{{asset('css/app-creative-dark.min.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('css/icons.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('css/app-creative-dark.min.css') }}" rel="stylesheet" type="text/css">
 
 </head>
 
@@ -25,16 +23,6 @@
     <div class="auth-fluid-form-box">
         <div class="align-items-center d-flex h-100">
             <div class="card-body">
-
-                <!-- Logo -->
-                <div class="auth-brand text-center text-lg-left">
-                    <a href="index.html" class="logo-dark">
-                        <span><img src="assets/images/logo-dark.png" alt="" height="18"></span>
-                    </a>
-                    <a href="index.html" class="logo-light">
-                        <span><img src="assets/images/logo.png" alt="" height="18"></span>
-                    </a>
-                </div>
 
                 <!-- title-->
                 <h4 class="mt-0">Sign In</h4>
@@ -66,14 +54,14 @@
                     </div>
                     <!-- social-->
                     <div class="text-center mt-4">
-                        <p class="text-muted font-16">Sign in with</p>
+                        <p class="text-muted font-16">Log in with</p>
                         <ul class="social-list list-inline mt-3">
                             <li class="list-inline-item">
-                                <a href="{{ route('auth.redirect','github') }}" class="social-list-item border-info text-info"><i
+                                <a href="{{ route('auth.redirect', 'github') }}" class="social-list-item border-info text-info"><i
                                         class="mdi mdi-github-circle"></i></a>
                             </li>
                             <li class="list-inline-item">
-                                <a href="javascript: void(0);" class="social-list-item border-info text-info"><i
+                                <a href="{{ route('auth.redirect', 'gitlab') }}" class="social-list-item border-info text-info"><i
                                         class="mdi mdi-gitlab"></i></a>
                             </li>
                             <li class="list-inline-item">
@@ -113,9 +101,8 @@
 <!-- end auth-fluid-->
 
 <!-- bundle -->
-<script src="{{asset('js/vendor.min.js')}}"></script>
-<script src="{{asset('js/app.min.js')}}"></script>
+<script src="{{ asset('js/vendor.min.js') }}"></script>
+<script src="{{ asset('js/app.min.js') }}"></script>
 
 </body>
-
 </html>
