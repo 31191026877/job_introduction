@@ -32,8 +32,8 @@ class UserController extends Controller
         $query = $this->model->clone()
             ->with('company:id,name')
             ->latest();
-        if(!empty($selectedRole) && $selectedRole === "All"){
-            $query->where('role',$selectedRole);
+        if (!empty($selectedRole) && $selectedRole === "All") {
+            $query->where('role', $selectedRole);
         }
         if (!empty($selectedCity) && $selectedCity !== 'All') {
             $query->where('city', $selectedCity);
@@ -67,9 +67,10 @@ class UserController extends Controller
 
     public function show($userId)
     {
-        $user = User::query()->where('id',$userId)->first();
+        $user = User::query()->where('id', $userId)->first();
         dd($user->toArray());
     }
+
     public function destroy($userId): RedirectResponse
     {
         User::destroy($userId);

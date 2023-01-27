@@ -33,10 +33,16 @@
                             <!--- Sidemenu -->
                             <ul class="metismenu side-nav mm-show">
 
-                                <li class="side-nav-title side-nav-item">Navigation</li>
+                                <li class="side-nav-title side-nav-item">Manage</li>
 
                                 <li class="side-nav-item">
                                     <a href="{{ route('admin.users.index') }}" class="side-nav-link">
+                                        <i class="uil-home-alt"></i>
+                                        <span> Users </span>
+                                    </a>
+                                </li>
+                                <li class="side-nav-item">
+                                    <a href="{{ route('admin.posts.index') }}" class="side-nav-link">
                                         <i class="uil-home-alt"></i>
                                         <span> Users </span>
                                     </a>
