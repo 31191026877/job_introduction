@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\PostCurrencySalaryEnum;
+use App\Enums\PostStatusEnum;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +19,7 @@ class Post extends Model
         'city',
         'status',
     ];
+
     protected static function booted()
     {
         static::creating(static function ($object) {
@@ -24,6 +27,7 @@ class Post extends Model
             $object->user_id = 1;
         });
     }
+
     public function sluggable(): array
     {
         return [
@@ -31,5 +35,14 @@ class Post extends Model
                 'source' => 'job_title'
             ]
         ];
+    }
+
+    public function getCurrencySalaryCodeAttribute()
+    {
+        return PostCurrencySalaryEnum::getKey($this->currency_salary);
+    }
+    public function getStatusNameAttribute()
+    {
+        return PostStatusEnum::getKey($this->status);
     }
 }

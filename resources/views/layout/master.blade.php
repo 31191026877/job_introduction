@@ -12,6 +12,7 @@
     <link href="{{ asset('css/icons.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('css/app-creative.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('css/app-creative-dark.min.css') }}" rel="stylesheet" type="text/css">
+    @stack('css')
 </head>
 
 <body class="loading"
@@ -49,6 +50,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script src="{{ asset('js/vendor.min.js') }}"></script>
 <script src="{{ asset('js/app.min.js') }}"></script>
+<script src="{{ asset('js/helper.js') }}"></script>
 
 @stack('js')
 </body>

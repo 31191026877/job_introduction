@@ -44,7 +44,7 @@
                                 <li class="side-nav-item">
                                     <a href="{{ route('admin.posts.index') }}" class="side-nav-link">
                                         <i class="uil-home-alt"></i>
-                                        <span> Users </span>
+                                        <span> Posts </span>
                                     </a>
                                 </li>
                             </ul>
