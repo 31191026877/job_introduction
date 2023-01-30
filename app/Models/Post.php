@@ -37,11 +37,11 @@ class Post extends Model
         ];
     }
 
-    public function getCurrencySalaryCodeAttribute()
+    public function getCurrencySalaryCodeAttribute(): string
     {
         return PostCurrencySalaryEnum::getKey($this->currency_salary);
     }
-    public function getStatusNameAttribute()
+    public function getStatusNameAttribute(): string
     {
         return PostStatusEnum::getKey($this->status);
     }
