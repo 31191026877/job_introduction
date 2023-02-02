@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 
 class TestController extends Controller
@@ -19,8 +20,13 @@ class TestController extends Controller
         View::share('title', ucwords($this->table));
         View::share('table', $this->table);
     }
-    public function index()
+    public function test()
     {
-
+        $columns = array();
+        foreach(DB::select("SHOW COLUMNS FROM posts") as $column)
+        {
+            $columns[] = $column->Field;
+        }
+        return $columns;
     }
 }

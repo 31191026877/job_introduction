@@ -1,11 +1,12 @@
 <?php
 
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
 
-Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::get('/test', [TestController::class, 'test']);
 Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/register', [AuthController::class, 'registering'])->name('registering');
 Route::get('/auth/redirect/{provider}', function ($provider) {
@@ -16,3 +17,12 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/', function () {
     return view('layout.master');
 })->name('welcome');
+
+Route::get('/language/{locale}', function ($locale) {
+    if (!in_array($locale, config('app.locales'))) {
+        $locale = config('app.fallback_locale');
+    }
+    setcookie('locale', $locale, time() + (86400 * 30), "/");
+    session()->put('locale', $locale);
+    return redirect()->back();
+})->name('language');
