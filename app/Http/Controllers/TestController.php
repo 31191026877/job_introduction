@@ -22,11 +22,6 @@ class TestController extends Controller
     }
     public function test()
     {
-        $columns = array();
-        foreach(DB::select("SHOW COLUMNS FROM posts") as $column)
-        {
-            $columns[] = $column->Field;
-        }
-        return $columns;
+        return user()->id;
     }
 }

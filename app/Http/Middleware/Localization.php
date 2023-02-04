@@ -7,11 +7,12 @@ use Illuminate\Http\Request;
 
 class Localization
 {
+
     public function handle(Request $request, Closure $next)
     {
         $locale = session()->get('locale');
         if (empty($locale)) {
-            $locale = $request->cookie('locale');
+            $locale = $_COOKIE['locale'];
         }
         if (!in_array($locale, config('app.locales'))) {
             $locale = config('app.fallback_locale');

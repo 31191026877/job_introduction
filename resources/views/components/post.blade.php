@@ -10,18 +10,22 @@
                         <a href="#pablo">{{ $languages }}</a>
                     </h4>
                     <p class="card-description">
+                        {{ $post->location }}
                     </p>
                     <div class="footer" style="display: flex; align-items: center; justify-content: space-between">
-                        <div class="author">
-                            <a href="#pablo">
-                                <img src="{{ $company->logo }}" class="avatar img-raised">
-                                <span>{{ $company->name }}</span>
-                            </a>
-                        </div>
-                        <button type="button" name="button"
-                                class="btn btn-sm btn-success btn-fill btn-round btn-rotate">
-                            <i class="material-icons">refresh</i>
-                        </button>
+{{--                        @todo @khatoan edit link company --}}
+                        @isset($company)
+                            <div class="author">
+                                <a href="#pablo">
+                                    <img src="{{ $company->logo }}" class="avatar img-raised">
+                                    <span>{{ $company->name }}</span>
+                                </a>
+                            </div>
+                        @endisset
+{{--                        <button type="button" name="button"--}}
+{{--                                class="btn btn-sm btn-success btn-fill btn-round btn-rotate">--}}
+{{--                            <i class="material-icons">refresh</i>--}}
+{{--                        </button>--}}
                     </div>
                 </div>
             </div>

@@ -11,6 +11,7 @@ use App\Http\Controllers\SystemConfigController;
 use App\Http\Requests\Post\StoreRequest;
 use App\Imports\PostImport;
 use App\Models\Company;
+use App\Models\Language;
 use App\Models\ObjectLanguage;
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
@@ -93,17 +94,18 @@ class PostController extends Controller
             $languages = $request->get('languages');
 
             foreach ($languages as $language) {
+                $language = Language::firstOrCreate(['name' => $language]);
                 ObjectLanguage::create([
-                    'language_id' => $language,
+                    'language_id' => $language->id,
                     'object_id' => $post->id,
-                    'type' => ObjectLanguageTypeEnum::POST,
+                    'object_type' => Post::class,
                 ]);
             }
             DB::commit();
             return $this->successResponse();
         } catch (Throwable $e) {
             DB::rollback();
-            return $this->errorResponse();
+            return $this->errorResponse($e->getMessage());
         }
     }
 
