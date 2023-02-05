@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PostRemotableEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +23,6 @@ class TestController extends Controller
     }
     public function test()
     {
-        return user()->id;
+        return auth()->user();
     }
 }

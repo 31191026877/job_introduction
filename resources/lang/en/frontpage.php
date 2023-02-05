@@ -2,5 +2,14 @@
 
 return array (
   'title' => 'Find what u need',
-  'Location' => 'Location',
+  'location' => 'location',
+  'from_salary' => 'From',
+  'to_salary' => 'Up to',
+  'applicant' => 'Applicant',
+  'hr' => 'HR',
+  'not_available' => 'Not available',
+  'all' => 'All',
+  'remote_only' => 'Remote only',
+  'office_only' => 'Office only',
+  'hybrid' => 'Hybrid',
 );

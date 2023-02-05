@@ -87,6 +87,7 @@
                             </div>
                         @endforeach
                     </div>
+
                     <div class="form-group">
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="checkbox-signup">

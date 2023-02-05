@@ -26,17 +26,8 @@
     <!-- section -->
     <div class="section">
         <div class="container">
-            <h2 class="section-title">
-                {{ __('frontpage.title') }}
-            </h2>
-            <div class="row">
-                @include('layout_frontpage.sidebar')
+            @yield('content')
 
-                <div class="col-md-9">
-                    @yield('content')
-
-                </div>
-            </div>
         </div>
     </div><!-- section -->
 
@@ -57,28 +48,7 @@
 <!--	Plugin for Tags, full documentation here: http://xoxco.com/projects/code/tagsinput/   -->
 
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        var slider2 = document.getElementById('sliderRefine');
-        noUiSlider.create(slider2, {
-            start: [42, 880],
-            connect: true,
-            range: {
-                'min': [30],
-                'max': [900]
-            }
-        });
-        var limitFieldMin = document.getElementById('price-left');
-        var limitFieldMax = document.getElementById('price-right');
-        slider2.noUiSlider.on('update', function (values, handle) {
-            if (handle) {
-                limitFieldMax.innerHTML = $('#price-right').data('currency') + Math.round(values[handle]);
-            } else {
-                limitFieldMin.innerHTML = $('#price-left').data('currency') + Math.round(values[handle]);
-            }
-        });
-    });
-</script>
+@stack('js')
 
 </body>
 </html>

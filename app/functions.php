@@ -7,7 +7,7 @@ use App\Models\Post;
 if (!function_exists('getRoleByKey')) {
     function getRoleByKey($key): string
     {
-        return strtolower(UserRoleEnum::getKeys($key)[0]);
+        return strtolower(UserRoleEnum::getKeys((int) $key)[0]);
     }
 }
 
@@ -17,6 +17,19 @@ if (!function_exists('user')) {
         return auth()->user();
     }
 }
+if (!function_exists('isSuperAdmin')) {
+    function isSuperAdmin(): bool
+    {
+        return user() && user()->role === UserRoleEnum::SUPER_ADMIN;
+    }
+}
+if (!function_exists('isAdmin')) {
+    function isAdmin(): bool
+    {
+        return user() && user()->role === UserRoleEnum::ADMIN;
+    }
+}
+
 if (!function_exists('getAndCachePostCities')) {
     function getAndCachePostCities(): array
     {
@@ -43,5 +56,19 @@ if (!function_exists('getAndCachePostCities')) {
                 return $arrCity;
             }
         );
+    }
+}
+if (!function_exists('get_currency_symbol')) {
+    function get_currency_symbol($string): string
+    {
+        $symbol = '';
+        $length = mb_strlen($string, 'utf-8');
+        for ($i = 0; $i < $length; $i++) {
+            $char = mb_substr($string, $i, 1, 'utf-8');
+            if (!ctype_digit($char) && !ctype_punct($char)) {
+                $symbol .= $char;
+            }
+        }
+        return $symbol;
     }
 }
