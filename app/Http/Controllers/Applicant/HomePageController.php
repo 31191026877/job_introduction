@@ -6,68 +6,50 @@ use App\Enums\PostRemotableEnum;
 use App\Enums\PostStatusEnum;
 use App\Enums\SystemCacheKeyEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Applicant\Homepage\IndexRequest;
 use App\Models\Config;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
 class HomePageController extends Controller
 {
-    public function index(Request $request)
+    public function index(IndexRequest $request)
     {
         $searchCities = $request->get('cities', []);
-        $arrCity = getAndCachePostCities();
-
-        $configs = Config::query()->where('is_public', 0)
+        $arrConfigs = Config::query()->where('is_public', 0)
             ->get();
-        $arrConfigs = [];
+        $configs = [];
 
-        foreach ($configs as $each) {
-            $arrConfigs[$each->key] = $each->value;
+        foreach ($arrConfigs as $each) {
+            $configs[$each->key] = $each->value;
         }
-        $minSalary = $request->get('min_salary', $arrConfigs['filter_min_salary']);
-        $maxSalary = $request->get('max_salary', $arrConfigs['filter_max_salary']);
-        $query = Post::query()
-            ->with([
-                'languages',
-                'company' => function ($q) {
-                    return $q->select([
-                        'id',
-                        'name',
-                        'logo'
-                    ]);
-                }
-            ])
-            ->approved()
-            ->orderByDesc('is_pinned')
-            ->orderByDesc('id');
+        $minSalary = $request->get('min_salary', $configs['filter_min_salary']);
+        $maxSalary = $request->get('max_salary', $configs['filter_max_salary']);
         $remotable = $request->get('remotable');
-        if (!empty($remotable)) {
-            $query->where('remotable', $remotable);
-        }
+        $searchCanParttime = $request->get('can_parttime');
+
+        $filters = [];
         if (!empty($searchCities)) {
-            $query->where(function ($q) use ($searchCities) {
-                foreach ($searchCities as $searchCity) {
-                    $q->orWhere('city', 'like', '%'.$searchCity.'%');
-                }
-                $q->orWhereNull('city');
-                return $q;
-            });
+            $filters['cities'] = $searchCities;
         }
         if ($request->has('min_salary')) {
-            $query->where(function ($q) use ($minSalary) {
-                $q->orWhere('min_salary', '>=', $minSalary);
-                $q->orWhereNull('min_salary');
-            });
+            $filters['min_salary'] = $minSalary;
         }
-
         if ($request->has('max_salary')) {
-            $query->where(function ($q) use ($maxSalary) {
-                $q->orWhere('max_salary', '<=', $maxSalary);
-                $q->orWhereNull('max_salary');
-            });
+            $filters['max_salary'] = $maxSalary;
+        }
+        if (!empty($remotable)) {
+            $filters['remotable'] = $remotable;
+        }
+        if (!empty($searchCanParttime)) {
+            $filters['can_parttime'] = $searchCanParttime;
         }
 
-        $posts = $query->paginate();
+        $posts = Post::query()
+            ->indexHomePage($filters)
+            ->paginate();
+
+        $arrCity = getAndCachePostCities();
         $filtersPostRemotable = PostRemotableEnum::getArrWithLowerKey();
         return view('applicant.index', [
             'posts' => $posts,
@@ -75,9 +57,10 @@ class HomePageController extends Controller
             'searchCities' => $searchCities,
             'minSalary' => $minSalary,
             'maxSalary' => $maxSalary,
-            'configs' => $arrConfigs,
+            'configs' => $configs,
             'filtersPostRemotable' => $filtersPostRemotable,
             'remotable' => $remotable,
+            'searchCanParttime' => $searchCanParttime,
         ]);
     }
 
@@ -87,8 +70,10 @@ class HomePageController extends Controller
             ->with('file')
             ->approved()
             ->findOrFail($postId);
+        $title = $post->job_title;
         return view('applicant.show', [
             'post' => $post,
+            'title' => $title,
         ]);
     }
 }

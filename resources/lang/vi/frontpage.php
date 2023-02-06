@@ -12,4 +12,5 @@ return array (
   'remote_only' => 'Làm từ xa',
   'office_only' => 'Làm tại văn phòng',
   'hybrid' => 'Làm từ xa và văn phòng',
+  'can_parttime' => 'Có thể làm việc bán thời gian',
 );

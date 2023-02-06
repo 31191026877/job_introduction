@@ -29,8 +29,8 @@ use Illuminate\Support\Str;
  * @property float|null $max_salary
  * @property int|null $currency_salary
  * @property string|null $requirement
- * @property string|null $start_date
- * @property string|null $end_date
+ * @property \Illuminate\Support\Carbon|null $start_date
+ * @property \Illuminate\Support\Carbon|null $end_date
  * @property int|null $number_applicants
  * @property int $status
  * @property int $is_pinned
@@ -41,6 +41,7 @@ use Illuminate\Support\Str;
  * @property-read \App\Models\Company|null $company
  * @property-read \App\Models\File|null $file
  * @property-read string $currency_salary_code
+ * @property-read bool $is_not_available
  * @property-read string|null $location
  * @property-read string|null $remotable_name
  * @property-read string $salary
@@ -50,6 +51,7 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|Post approved()
  * @method static \Database\Factories\PostFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Post findSimilarSlugs(string $attribute, array $config, string $slug)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post indexHomePage($filter)
  * @method static \Illuminate\Database\Eloquent\Builder|Post newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Post newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Post query()
@@ -103,8 +105,9 @@ class Post extends Model
     ];
     protected $casts = [
         'start_date' => 'date',
-        'end_date'   => 'date',
+        'end_date' => 'date',
     ];
+
     protected static function booted()
     {
         static::creating(static function ($object) {
@@ -166,6 +169,7 @@ class Post extends Model
         $val = $this->currency_salary;
         $key = PostCurrencySalaryEnum::getKey($val);
         $locale = PostCurrencySalaryEnum::getLocaleByVal($val);
+
         $format = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
         $rate = Config::getByKey($key);
         if (!is_null($this->min_salary)) {
@@ -196,6 +200,7 @@ class Post extends Model
     {
         return $this->hasOne(File::class);
     }
+
     public function getLocationAttribute(): ?string
     {
         if (!empty($this->district)) {
@@ -207,13 +212,8 @@ class Post extends Model
     public function getRemotableNameAttribute(): ?string
     {
         $key = PostRemotableEnum::getKey($this->remotable);
-        $arr = explode('_', $key);
-        $str = '';
-        foreach ($arr as $each) {
-            $str .= Str::title($each).' ';
-        }
 
-        return $str;
+        return Str::title(str_replace('_', ' ', $key));
 
     }
 
@@ -231,5 +231,49 @@ class Post extends Model
             return false;
         }
         return !now()->between($this->start_date, $this->end_date);
+    }
+
+    public function scopeIndexHomePage($query, $filters)
+    {
+        return $query
+            ->with([
+                'languages',
+                'company' => function ($q) {
+                    $q->select([
+                        'id',
+                        'name',
+                        'logo',
+                    ]);
+                }
+            ])
+            ->approved()
+            ->when(isset($filters['cities']), function ($q) use ($filters) {
+                $q->where(function ($q) use ($filters) {
+                    foreach ($filters['cities'] as $searchCity) {
+                        $q->orWhere('city', 'like', '%'.$searchCity.'%');
+                    }
+                    $q->orWhereNull('city');
+                });
+            })
+            ->when(isset($filters['min_salary']), function ($q) use ($filters) {
+                $q->where(function ($q) use ($filters) {
+                    $q->orWhere('min_salary', '>=', $filters['min_salary']);
+                    $q->orWhereNull('min_salary');
+                });
+            })
+            ->when(isset($filters['max_salary']), function ($q) use ($filters) {
+                $q->where(function ($q) use ($filters) {
+                    $q->orWhere('max_salary', '<=', $filters['max_salary']);
+                    $q->orWhereNull('max_salary');
+                });
+            })
+            ->when(isset($filters['remotable']), function ($q) use ($filters) {
+                $q->where('remotable', $filters['remotable']);
+            })
+            ->when(isset($filters['can_parttime']), function ($q) use ($filters) {
+                $q->where('can_parttime', $filters['can_parttime']);
+            })
+            ->orderByDesc('is_pinned')
+            ->orderByDesc('id');
     }
 }

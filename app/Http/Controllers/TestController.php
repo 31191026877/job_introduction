@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PostRemotableEnum;
 use App\Http\Controllers\Controller;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
@@ -23,6 +24,7 @@ class TestController extends Controller
     }
     public function test()
     {
-        return auth()->user();
+       $data = Post::query()->latest()->limit(3)->get();
+       return $data;
     }
 }

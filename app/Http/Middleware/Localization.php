@@ -12,8 +12,8 @@ class Localization
     {
         $locale = session()->get('locale');
         if (empty($locale)) {
-//            $locale = $_COOKIE['locale'];
             $locale = $request->cookie('locale');
+
         }
         if (!in_array($locale, config('app.locales'))) {
             $locale = config('app.fallback_locale');

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Post;
 
 use App\Enums\PostCurrencySalaryEnum;
+use App\Enums\PostRemotableEnum;
 use App\Models\Post;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -16,7 +17,7 @@ class   StoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return auth()->check();
     }
 
     /**
@@ -54,9 +55,9 @@ class   StoreRequest extends FormRequest
                 'numeric',
                 'min:1',
             ],
-            'remotables' => [
+            'remotable' => [
                 'required',
-                'array',
+                Rule::in(PostRemotableEnum::getArrWithoutAll()),
             ],
             'is_parttime' => [
                 'nullable',

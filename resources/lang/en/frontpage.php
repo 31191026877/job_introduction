@@ -12,4 +12,5 @@ return array (
   'remote_only' => 'Remote only',
   'office_only' => 'Office only',
   'hybrid' => 'Hybrid',
+  'can_parttime' => 'Can Part time',
 );
